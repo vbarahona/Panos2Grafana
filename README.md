@@ -15,7 +15,7 @@ The infraestruture needed is:
 I am asuming that your PanOS Firewall is configured to anwer SNMP queries and you have a InfluxDB, Telegraf and Grafana instaled and configured propertly . I will not cover information about instalation and basic configuration.
 
 ## Telegraf
-We will colect data using Telegraf with the SNMP plugin. Just download [panos_snmp.conf](https://github.com/vbarahona/Panos2Grafana/raw/master/panos_snmp.conf), copy the file in /etc/telegraf/telegraf.d/ and restart telegraf
+We will colect data using Telegraf with the SNMP plugin. Just download [panos_snmp.conf](https://github.com/vbarahona/Panos2Grafana/raw/master/panos_snmp.conf), modify the agents and comunities variables, copy the file in /etc/telegraf/telegraf.d/ and restart telegraf
 ```
 sudo service telegraf restart
 ```
@@ -24,4 +24,4 @@ After some seconds, its a good idea to check if everything is working
 sudo service telegraf status
 ```
 ## Grafana
-Finally you can import the dashboard importing the json file [wifi-users_grafana_dashboard.json](https://github.com/vbarahona/Panos2Grafana/raw/master/wifi-users_grafana_dashboard.json) or importing from the Dashboard number xxxx from [grafana.com](https://grafana.com/dashboards/xxxx)
+Finally you can import the dashboard importing the json file [panos_grafana_dashboard.json](https://github.com/vbarahona/Panos2Grafana/raw/master/panos_grafana_dashboard.json) or importing from the Dashboard number xxxx from [grafana.com](https://grafana.com/dashboards/xxxx)
