@@ -24,4 +24,4 @@ After some seconds, its a good idea to check if everything is working
 sudo service telegraf status
 ```
 ## Grafana
-Finally you can import the dashboard importing the json file [panos_grafana_dashboard.json](https://github.com/vbarahona/Panos2Grafana/raw/master/panos_grafana_dashboard.json) or importing from the Dashboard number xxxx from [grafana.com](https://grafana.com/dashboards/xxxx)
+Finally you can import the Dashboard number xxxx from [grafana.com](https://grafana.com/dashboards/xxxx)
