@@ -1,7 +1,11 @@
 # Panos2Grafana
-Steps and configurations to create a complete PaloAlto Firewall dashboard in GRAFANA.
+Steps and configurations to create a complete PaloAlto Firewall dashboard in GRAFANA. The dashboard is compatible with one firewall or with a HA cluster of 2 firewalls. 
 
-This Dashboard is based in a PA5250 so if you are using a different model probably some of the sensor graphs (cpu_temp and fan_speed) can be inadequate, but the rest of the graphs should be ok.
+This Dashboard is based in a model PA5250 so if you are using a different one, probably some of the sensor graphs (cpu_temp and fan_speed) can be inadequate, but the rest of the graphs should be ok.
+
+# Screenshot
+
+<p align="center"><img src="https://github.com/vbarahona/Panos2Grafana/blob/master/screencapture-paloalto-grafana.png" alt="screenshot" width="400"></p>
 
 # Getting Starting
 
