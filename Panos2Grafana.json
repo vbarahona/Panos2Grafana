@@ -11,6 +11,12 @@
   ],
   "__requires": [
     {
+      "type": "panel",
+      "id": "bargauge",
+      "name": "Bar Gauge",
+      "version": ""
+    },
+    {
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
@@ -27,12 +33,6 @@
       "id": "influxdb",
       "name": "InfluxDB",
       "version": "1.0.0"
-    },
-    {
-      "type": "panel",
-      "id": "singlestat",
-      "name": "Singlestat",
-      "version": ""
     }
   ],
   "annotations": {
@@ -55,280 +55,166 @@
   "links": [],
   "panels": [
     {
+      "cacheTimeout": null,
+      "datasource": "${DS_INFLUXDB_TELEGRAF}",
+      "description": "",
+      "gridPos": {
+        "h": 3,
+        "w": 23,
+        "x": 0,
+        "y": 0
+      },
+      "id": 3,
+      "links": [],
+      "options": {
+        "displayMode": "lcd",
+        "fieldOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "defaults": {
+            "decimals": 0,
+            "mappings": [
+              {
+                "id": 0,
+                "op": "=",
+                "text": "N/A",
+                "type": 1,
+                "value": "null"
+              }
+            ],
+            "max": 100,
+            "min": 0,
+            "nullValueMode": "connected",
+            "thresholds": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 50
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ],
+            "unit": "percent"
+          },
+          "override": {},
+          "values": false
+        },
+        "orientation": "horizontal"
+      },
+      "pluginVersion": "6.4.4",
+      "targets": [
+        {
+          "alias": "$tag_hostname DP",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "hostname"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "pan_system",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "hrProcessorLoad.2"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "$tag_hostname mgmt",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "hostname"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "pan_system",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "hrProcessorLoad.1"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Niobe - DP",
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
       "collapsed": false,
       "datasource": "${DS_INFLUXDB_TELEGRAF}",
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 0
+        "y": 3
       },
       "id": 9,
       "panels": [],
       "title": "CPU Load & Sensors",
       "type": "row"
-    },
-    {
-      "cacheTimeout": null,
-      "colorBackground": true,
-      "colorPostfix": false,
-      "colorValue": false,
-      "colors": [
-        "#299c46",
-        "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
-      ],
-      "datasource": "${DS_INFLUXDB_TELEGRAF}",
-      "decimals": 0,
-      "description": "",
-      "format": "percent",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 2,
-        "x": 0,
-        "y": 1
-      },
-      "id": 3,
-      "interval": null,
-      "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
-      "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "options": {},
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
-        }
-      ],
-      "sparkline": {
-        "fillColor": "#C0D8FF",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": true,
-        "ymax": null,
-        "ymin": null
-      },
-      "tableColumn": "",
-      "targets": [
-        {
-          "alias": "$tag_hostname",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "hostname"
-              ],
-              "type": "tag"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "measurement": "pan_system",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "hrProcessorLoad.2"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "last"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "hostname",
-              "operator": "=",
-              "value": "niobe"
-            }
-          ]
-        }
-      ],
-      "thresholds": "",
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Niobe - DP",
-      "type": "singlestat",
-      "valueFontSize": "120%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "current"
-    },
-    {
-      "cacheTimeout": null,
-      "colorBackground": true,
-      "colorPostfix": false,
-      "colorValue": false,
-      "colors": [
-        "#299c46",
-        "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
-      ],
-      "datasource": "${DS_INFLUXDB_TELEGRAF}",
-      "decimals": 0,
-      "description": "",
-      "format": "percent",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 2,
-        "x": 2,
-        "y": 1
-      },
-      "id": 5,
-      "interval": null,
-      "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
-      "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "options": {},
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
-        }
-      ],
-      "sparkline": {
-        "fillColor": "#C0D8FF",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": true,
-        "ymax": null,
-        "ymin": null
-      },
-      "tableColumn": "",
-      "targets": [
-        {
-          "alias": "$tag_hostname",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "hostname"
-              ],
-              "type": "tag"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "measurement": "pan_system",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "hrProcessorLoad.2"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "last"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "hostname",
-              "operator": "=",
-              "value": "morfeo"
-            }
-          ]
-        }
-      ],
-      "thresholds": "",
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Morfeo - DP",
-      "type": "singlestat",
-      "valueFontSize": "120%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "current"
     },
     {
       "alert": {
@@ -374,22 +260,22 @@
       "datasource": "${DS_INFLUXDB_TELEGRAF}",
       "decimals": 0,
       "fill": 1,
-      "fillGradient": 1,
+      "fillGradient": 3,
       "gridPos": {
-        "h": 8,
+        "h": 7,
         "w": 12,
-        "x": 4,
-        "y": 1
+        "x": 0,
+        "y": 4
       },
       "id": 7,
       "legend": {
         "alignAsTable": true,
-        "avg": false,
+        "avg": true,
         "current": true,
         "hideEmpty": true,
         "hideZero": true,
         "max": true,
-        "min": true,
+        "min": false,
         "show": true,
         "sort": "current",
         "sortDesc": true,
@@ -406,7 +292,12 @@
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
-      "seriesOverrides": [],
+      "seriesOverrides": [
+        {
+          "alias": "/mgmt/",
+          "legend": false
+        }
+      ],
       "spaceLength": 10,
       "stack": false,
       "steppedLine": false,
@@ -556,17 +447,19 @@
       "dashes": false,
       "datasource": "${DS_INFLUXDB_TELEGRAF}",
       "fill": 1,
-      "fillGradient": 0,
+      "fillGradient": 1,
       "gridPos": {
         "h": 4,
-        "w": 8,
-        "x": 16,
-        "y": 1
+        "w": 12,
+        "x": 12,
+        "y": 4
       },
       "id": 49,
       "legend": {
         "avg": false,
         "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
         "max": false,
         "min": false,
         "show": false,
@@ -675,268 +568,6 @@
       }
     },
     {
-      "cacheTimeout": null,
-      "colorBackground": true,
-      "colorPostfix": false,
-      "colorValue": false,
-      "colors": [
-        "#299c46",
-        "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
-      ],
-      "datasource": "${DS_INFLUXDB_TELEGRAF}",
-      "decimals": 0,
-      "description": "",
-      "format": "percent",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 2,
-        "x": 0,
-        "y": 5
-      },
-      "id": 2,
-      "interval": null,
-      "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
-      "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "options": {},
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
-        }
-      ],
-      "sparkline": {
-        "fillColor": "#C0D8FF",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": true,
-        "ymax": null,
-        "ymin": null
-      },
-      "tableColumn": "",
-      "targets": [
-        {
-          "alias": "$tag_hostname",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "hostname"
-              ],
-              "type": "tag"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "measurement": "pan_system",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "hrProcessorLoad.1"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "last"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "hostname",
-              "operator": "=",
-              "value": "niobe"
-            }
-          ]
-        }
-      ],
-      "thresholds": "",
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Niobe - mgmt ",
-      "type": "singlestat",
-      "valueFontSize": "120%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "current"
-    },
-    {
-      "cacheTimeout": null,
-      "colorBackground": true,
-      "colorPostfix": false,
-      "colorValue": false,
-      "colors": [
-        "#299c46",
-        "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
-      ],
-      "datasource": "${DS_INFLUXDB_TELEGRAF}",
-      "decimals": 0,
-      "description": "",
-      "format": "percent",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 2,
-        "x": 2,
-        "y": 5
-      },
-      "id": 4,
-      "interval": null,
-      "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
-      "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "options": {},
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
-        }
-      ],
-      "sparkline": {
-        "fillColor": "#C0D8FF",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": true,
-        "ymax": null,
-        "ymin": null
-      },
-      "tableColumn": "",
-      "targets": [
-        {
-          "alias": "$tag_hostname",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "hostname"
-              ],
-              "type": "tag"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "measurement": "pan_system",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "hrProcessorLoad.1"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "last"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "hostname",
-              "operator": "=",
-              "value": "morfeo"
-            }
-          ]
-        }
-      ],
-      "thresholds": "",
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Morfeo - mgmt ",
-      "type": "singlestat",
-      "valueFontSize": "120%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "current"
-    },
-    {
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
@@ -945,15 +576,17 @@
       "fill": 1,
       "fillGradient": 1,
       "gridPos": {
-        "h": 4,
-        "w": 8,
-        "x": 16,
-        "y": 5
+        "h": 3,
+        "w": 12,
+        "x": 12,
+        "y": 8
       },
       "id": 47,
       "legend": {
         "avg": false,
         "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
         "max": false,
         "min": false,
         "show": false,
@@ -1069,7 +702,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 9
+        "y": 11
       },
       "id": 11,
       "panels": [],
@@ -1084,20 +717,22 @@
       "datasource": "${DS_INFLUXDB_TELEGRAF}",
       "decimals": 0,
       "fill": 1,
-      "fillGradient": 1,
+      "fillGradient": 3,
       "gridPos": {
         "h": 6,
         "w": 12,
         "x": 0,
-        "y": 10
+        "y": 12
       },
       "id": 13,
       "legend": {
         "alignAsTable": true,
-        "avg": false,
+        "avg": true,
         "current": true,
+        "hideEmpty": true,
+        "hideZero": true,
         "max": true,
-        "min": true,
+        "min": false,
         "rightSide": false,
         "show": true,
         "total": false,
@@ -1210,20 +845,22 @@
       "dashes": false,
       "datasource": "${DS_INFLUXDB_TELEGRAF}",
       "fill": 1,
-      "fillGradient": 1,
+      "fillGradient": 3,
       "gridPos": {
         "h": 6,
         "w": 12,
         "x": 12,
-        "y": 10
+        "y": 12
       },
       "id": 17,
       "legend": {
         "alignAsTable": true,
         "avg": true,
         "current": true,
+        "hideEmpty": true,
+        "hideZero": true,
         "max": true,
-        "min": true,
+        "min": false,
         "show": true,
         "total": false,
         "values": true
@@ -1388,7 +1025,7 @@
           "logBase": 1,
           "max": null,
           "min": null,
-          "show": true
+          "show": false
         }
       ],
       "yaxis": {
@@ -1404,22 +1041,22 @@
       "datasource": "${DS_INFLUXDB_TELEGRAF}",
       "description": "Number of active Conexión Per Second for Vsys",
       "fill": 1,
-      "fillGradient": 1,
+      "fillGradient": 3,
       "gridPos": {
         "h": 6,
         "w": 12,
         "x": 0,
-        "y": 16
+        "y": 18
       },
       "id": 15,
       "legend": {
         "alignAsTable": true,
-        "avg": false,
+        "avg": true,
         "current": true,
         "hideEmpty": true,
         "hideZero": true,
         "max": true,
-        "min": true,
+        "min": false,
         "rightSide": false,
         "show": true,
         "total": false,
@@ -1621,7 +1258,7 @@
           "logBase": 1,
           "max": null,
           "min": null,
-          "show": true
+          "show": false
         }
       ],
       "yaxis": {
@@ -1637,12 +1274,12 @@
       "datasource": "${DS_INFLUXDB_TELEGRAF}",
       "description": "Connections Per Seconds by Security Zone.",
       "fill": 1,
-      "fillGradient": 1,
+      "fillGradient": 3,
       "gridPos": {
         "h": 6,
         "w": 12,
         "x": 12,
-        "y": 16
+        "y": 18
       },
       "hideTimeOverride": false,
       "id": 45,
@@ -1663,7 +1300,7 @@
         "values": true
       },
       "lines": true,
-      "linewidth": 1,
+      "linewidth": 2,
       "nullPointMode": "null",
       "options": {
         "dataLinks": []
@@ -1702,8 +1339,8 @@
           "measurement": "pan_zone",
           "orderByTime": "ASC",
           "policy": "4weeks",
-          "query": "SELECT last(\"panZoneActiveTcpCps\") FROM \"4weeks\".\"panZoneTable\" WHERE (\"zone\" =~ /^\\w/) AND $timeFilter GROUP BY time($__interval) fill(linear)",
-          "rawQuery": false,
+          "query": "SELECT mean(\"panZoneActiveTcpCps\") + mean(\"panZoneActiveUdpCps\") + mean(\"panZoneActiveOtherIpCps\") FROM \"4weeks\".\"pan_zone\" WHERE (\"zone\" =~ /^\\w/) AND $timeFilter GROUP BY time($__interval), \"zone\" fill(linear)",
+          "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
@@ -1803,12 +1440,12 @@
       "datasource": "${DS_INFLUXDB_TELEGRAF}",
       "description": "Connections Per Seconds by Protocol for each security zone.",
       "fill": 1,
-      "fillGradient": 1,
+      "fillGradient": 3,
       "gridPos": {
         "h": 6,
         "w": 12,
         "x": 0,
-        "y": 22
+        "y": 24
       },
       "hideTimeOverride": false,
       "id": 19,
@@ -1829,7 +1466,7 @@
         "values": true
       },
       "lines": true,
-      "linewidth": 1,
+      "linewidth": 2,
       "nullPointMode": "null",
       "options": {
         "dataLinks": []
@@ -2046,12 +1683,12 @@
       "dashes": false,
       "datasource": "${DS_INFLUXDB_TELEGRAF}",
       "fill": 1,
-      "fillGradient": 1,
+      "fillGradient": 3,
       "gridPos": {
         "h": 6,
         "w": 12,
         "x": 12,
-        "y": 22
+        "y": 24
       },
       "id": 36,
       "legend": {
@@ -2194,17 +1831,18 @@
       "dashes": false,
       "datasource": "${DS_INFLUXDB_TELEGRAF}",
       "fill": 1,
-      "fillGradient": 1,
+      "fillGradient": 3,
       "gridPos": {
         "h": 6,
         "w": 12,
         "x": 0,
-        "y": 28
+        "y": 30
       },
       "id": 42,
       "legend": {
         "avg": false,
         "current": false,
+        "hideEmpty": true,
         "hideZero": true,
         "max": false,
         "min": false,
@@ -2358,18 +1996,19 @@
       "dashes": false,
       "datasource": "${DS_INFLUXDB_TELEGRAF}",
       "fill": 1,
-      "fillGradient": 1,
+      "fillGradient": 3,
       "gridPos": {
         "h": 6,
         "w": 12,
         "x": 12,
-        "y": 28
+        "y": 30
       },
       "id": 40,
       "interval": "",
       "legend": {
         "avg": false,
         "current": false,
+        "hideEmpty": true,
         "hideZero": true,
         "max": false,
         "min": false,
@@ -2778,12 +2417,12 @@
       "dashes": false,
       "datasource": "${DS_INFLUXDB_TELEGRAF}",
       "fill": 1,
-      "fillGradient": 1,
+      "fillGradient": 3,
       "gridPos": {
         "h": 5,
         "w": 12,
         "x": 0,
-        "y": 34
+        "y": 36
       },
       "id": 44,
       "legend": {
@@ -2896,7 +2535,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 39
+        "y": 41
       },
       "id": 21,
       "panels": [],
@@ -2910,17 +2549,19 @@
       "dashes": false,
       "datasource": "${DS_INFLUXDB_TELEGRAF}",
       "fill": 1,
-      "fillGradient": 1,
+      "fillGradient": 3,
       "gridPos": {
         "h": 5,
         "w": 12,
         "x": 0,
-        "y": 40
+        "y": 42
       },
       "id": 31,
       "legend": {
         "avg": false,
         "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
         "max": false,
         "min": false,
         "show": true,
@@ -3263,7 +2904,7 @@
           "logBase": 1,
           "max": null,
           "min": null,
-          "show": true
+          "show": false
         }
       ],
       "yaxis": {
@@ -3279,12 +2920,12 @@
       "datasource": "${DS_INFLUXDB_TELEGRAF}",
       "description": "TCP SYN Cookies, classified profile",
       "fill": 1,
-      "fillGradient": 1,
+      "fillGradient": 3,
       "gridPos": {
         "h": 5,
         "w": 12,
         "x": 12,
-        "y": 40
+        "y": 42
       },
       "id": 25,
       "interval": "",
@@ -3625,12 +3266,12 @@
       "dashes": false,
       "datasource": "${DS_INFLUXDB_TELEGRAF}",
       "fill": 1,
-      "fillGradient": 1,
+      "fillGradient": 3,
       "gridPos": {
         "h": 5,
         "w": 12,
         "x": 0,
-        "y": 45
+        "y": 47
       },
       "id": 34,
       "legend": {
@@ -3948,7 +3589,7 @@
           "logBase": 1,
           "max": null,
           "min": null,
-          "show": true
+          "show": false
         }
       ],
       "yaxis": {
@@ -3963,19 +3604,19 @@
       "dashes": false,
       "datasource": "${DS_INFLUXDB_TELEGRAF}",
       "fill": 1,
-      "fillGradient": 1,
+      "fillGradient": 3,
       "gridPos": {
         "h": 5,
         "w": 12,
         "x": 12,
-        "y": 45
+        "y": 47
       },
       "id": 29,
       "legend": {
         "alignAsTable": false,
         "avg": false,
         "current": false,
-        "hideEmpty": false,
+        "hideEmpty": true,
         "hideZero": true,
         "max": false,
         "min": false,
@@ -3993,12 +3634,7 @@
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
-      "seriesOverrides": [
-        {
-          "alias": "Host Denied by Scan",
-          "yaxis": 2
-        }
-      ],
+      "seriesOverrides": [],
       "spaceLength": 10,
       "stack": false,
       "steppedLine": false,
@@ -4119,7 +3755,7 @@
           "logBase": 1,
           "max": null,
           "min": null,
-          "show": true
+          "show": false
         }
       ],
       "yaxis": {
@@ -4134,17 +3770,19 @@
       "dashes": false,
       "datasource": "${DS_INFLUXDB_TELEGRAF}",
       "fill": 1,
-      "fillGradient": 1,
+      "fillGradient": 3,
       "gridPos": {
         "h": 5,
         "w": 12,
         "x": 0,
-        "y": 50
+        "y": 52
       },
       "id": 27,
       "legend": {
         "avg": false,
         "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
         "max": false,
         "min": false,
         "show": true,
@@ -4283,7 +3921,7 @@
           "logBase": 1,
           "max": null,
           "min": null,
-          "show": true
+          "show": false
         }
       ],
       "yaxis": {
@@ -4299,17 +3937,18 @@
       "datasource": "${DS_INFLUXDB_TELEGRAF}",
       "description": "Number of entries in DoS block tables",
       "fill": 1,
-      "fillGradient": 1,
+      "fillGradient": 3,
       "gridPos": {
         "h": 5,
         "w": 12,
         "x": 12,
-        "y": 50
+        "y": 52
       },
       "id": 23,
       "legend": {
         "avg": false,
         "current": false,
+        "hideEmpty": true,
         "hideZero": true,
         "max": false,
         "min": false,
@@ -4493,17 +4132,19 @@
       "dashes": false,
       "datasource": "${DS_INFLUXDB_TELEGRAF}",
       "fill": 1,
-      "fillGradient": 1,
+      "fillGradient": 3,
       "gridPos": {
         "h": 5,
         "w": 12,
         "x": 0,
-        "y": 55
+        "y": 57
       },
       "id": 38,
       "legend": {
         "avg": false,
         "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
         "max": false,
         "min": false,
         "show": true,
@@ -4846,7 +4487,7 @@
           "logBase": 1,
           "max": null,
           "min": null,
-          "show": true
+          "show": false
         }
       ],
       "yaxis": {
@@ -4863,7 +4504,7 @@
     "list": []
   },
   "time": {
-    "from": "now-12h",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {
@@ -4883,5 +4524,5 @@
   "timezone": "",
   "title": "Firewalls UAM v2",
   "uid": "qLLuD-JZy",
-  "version": 8
+  "version": 9
 }
