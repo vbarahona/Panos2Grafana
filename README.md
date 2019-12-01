@@ -1,7 +1,7 @@
 # Panos2Grafana
 Steps and configurations to create a complete PanOS Firewall dashboard in GRAFANA.
 
-This Dashboard is based in a PA5250 so if you are using a different model probably some of the sensors graphs can be inadequate, but rest of the graphs should be ok.
+This Dashboard is based in a PA5250 so if you are using a different model probably some of the sensors graphs (cpu_temp and fan_speed) can be inadequate, but rest of the graphs should be ok.
 
 # Getting Starting
 
