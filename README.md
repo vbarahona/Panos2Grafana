@@ -26,4 +26,4 @@ After some seconds, its a good idea to check if everything is working
 sudo service telegraf status
 ```
 ## Grafana
-Finally you can import the Dashboard number xxxx from [grafana.com](https://grafana.com/dashboards/xxxx)
+Finally you can import the Dashboard number 11321 from [grafana.com](https://grafana.com/dashboards/11321)
