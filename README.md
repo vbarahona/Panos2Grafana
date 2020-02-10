@@ -19,7 +19,7 @@ The infraestruture needed is:
 I am assuming that your PanOS Firewall is configured to answer SNMP queries and you have a InfluxDB, Telegraf and Grafana installed and configured property . I will not cover information about installation and basic configuration.
 
 ## Telegraf
-First, download [pan-81-snmp-mib-modules.zip] (https://github.com/vbarahona/Panos2Grafana/blob/master/pan-81-snmp-mib-modules.zip) and uncompress all the files in /etc/telegraf/telegraf.d/.snmp/mibs/
+First, download [pan-81-snmp-mib-modules.zip](https://github.com/vbarahona/Panos2Grafana/blob/master/pan-81-snmp-mib-modules.zip) and uncompress all the files in /etc/telegraf/telegraf.d/.snmp/mibs/
 
 We will collect data using Telegraf with the SNMP plugin. Just download [panos_snmp.conf](https://github.com/vbarahona/Panos2Grafana/raw/master/panos_snmp.conf), modifies the agents and communities variables, copy the file in /etc/telegraf/telegraf.d/ and reload telegraf
 ```
