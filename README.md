@@ -1,4 +1,4 @@
-Adding some config files for other PAN devices
+Adding some config files for other PAN devices. /Magnus
 
 # Panos2Grafana
 Steps and configurations to create a complete PaloAlto Firewall dashboard in GRAFANA. The dashboard is compatible with one firewall or with a HA cluster of 2 firewalls. 
