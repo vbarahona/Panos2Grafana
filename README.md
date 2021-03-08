@@ -20,6 +20,7 @@ Your PanOS Firewall must be configured to answer SNMP queries.  Your TIG environ
 
 ## SNMP Mibs
 HOST-RESOURCES-MIB is required for some panel. The easiest way is install the packages for SNMP MIBs in your distribution.
+
 Ubuntu/Debian
 ```
 apt-get install snmp-mibs-downloader
