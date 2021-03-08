@@ -1,7 +1,7 @@
 # Panos2Grafana
-Steps and configurations to create a complete PaloAlto Firewall dashboard in GRAFANA. The dashboard is compatible with one firewall or with a HA cluster of 2 firewalls. 
+Steps and configurations to create a complete PaloAlto Firewall dashboard in GRAFANA. The dashboard is compatible with one firewall or with a HA cluster 'of 2 firewalls. 
 
-This Dashboard is based in a model PA5250 so if you are using a different one, probably some of the sensor graphs (cpu_temp and fan_speed) can be inadequate, but the rest of the graphs should be ok.
+At this time its provided support for models PA5250, PA3020 and PA820, but if you are using a different one, probably some of the sensor graphs (cpu_temp and fan_speed) can be inadequate, but the rest of the panels should be ok.
 
 # Screenshot
 
@@ -16,18 +16,28 @@ The infraestruture needed is:
 - Telegraf
 - Grafana
 
-I am assuming that your PanOS Firewall is configured to answer SNMP queries and you have a InfluxDB, Telegraf and Grafana installed and configured property . I will not cover information about installation and basic configuration.
+Your PanOS Firewall must be configured to answer SNMP queries.  Your TIG environment (Telegraf/InfluxDB/Grafana) also installed and configured property. I will not cover information about installation and basic configuration.
+
+## SNMP Mibs
+HOST-RESOURCES-MIB is required for some panel. The easiest way is install the packages for SNMP MIBs in your distribution.
+Ubuntu/Debian
+```
+apt-get install snmp-mibs-downloader
+```
+Centos/RedHat
+```
+yum install net-snmp-libs
+```
 
 ## Telegraf
-First, download [pan-81-snmp-mib-modules.zip](https://github.com/vbarahona/Panos2Grafana/blob/master/pan-81-snmp-mib-modules.zip?raw=true) and uncompress all the files in /etc/telegraf/telegraf.d/.snmp/mibs/
 
-We will collect data using Telegraf with the SNMP plugin. Just download [panos_snmp.conf](https://github.com/vbarahona/Panos2Grafana/raw/master/panos_snmp.conf), modifies the agents and communities variables, copy the file in /etc/telegraf/telegraf.d/ and reload telegraf
+Data will be collected by Telegraf SNMP plugin. Just download the appropriate configuration file for your model (5250.conf for PA5250 for example), modify the agents and communities variables, copy the file in /etc/telegraf/telegraf.d/ and reload telegraf
 ```
-sudo service telegraf reload
+sudo systemclt restart telegraf
 ```
 After some seconds, it's a good idea to check if everything is working
 ```
-sudo service telegraf status
+sudo systemctl status telegraf
 ```
 ## Grafana
-Finally, you can import the Dashboard number [11321](https://grafana.com/dashboards/11321) from [grafana.com](https://grafana.com/dashboards/11321)
+Finally, import Dashboard number [11321](https://grafana.com/dashboards/11321) from [grafana.com](https://grafana.com/dashboards/11321)
