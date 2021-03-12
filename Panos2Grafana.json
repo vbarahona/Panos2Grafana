@@ -1,40 +1,4 @@
 {
-  "__inputs": [
-    {
-      "name": "DS_INFLUXDB_TELEGRAF",
-      "label": "influxdb_telegraf",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "influxdb",
-      "pluginName": "InfluxDB"
-    }
-  ],
-  "__requires": [
-    {
-      "type": "panel",
-      "id": "bargauge",
-      "name": "Bar gauge",
-      "version": ""
-    },
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "7.0.0"
-    },
-    {
-      "type": "panel",
-      "id": "graph",
-      "name": "Graph",
-      "version": ""
-    },
-    {
-      "type": "datasource",
-      "id": "influxdb",
-      "name": "InfluxDB",
-      "version": "1.0.0"
-    }
-  ],
   "annotations": {
     "list": [
       {
@@ -52,12 +16,13 @@
   "editable": true,
   "gnetId": 11321,
   "graphTooltip": 0,
-  "id": null,
+  "id": 4,
+  "iteration": 1615571898371,
   "links": [],
   "panels": [
     {
       "cacheTimeout": null,
-      "datasource": "${DS_INFLUXDB_TELEGRAF}",
+      "datasource": "InfluxDB",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -77,7 +42,6 @@
           ],
           "max": 100,
           "min": 0,
-          "nullValueMode": "connected",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -114,11 +78,13 @@
           "calcs": [
             "lastNotNull"
           ],
+          "fields": "",
           "values": false
         },
-        "showUnfilled": true
+        "showUnfilled": true,
+        "text": {}
       },
-      "pluginVersion": "7.0.0",
+      "pluginVersion": "7.4.3",
       "targets": [
         {
           "alias": "$tag_hostname DP",
@@ -161,7 +127,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "cluster",
+              "operator": "=~",
+              "value": "/^$cluster$/"
+            }
+          ]
         },
         {
           "alias": "$tag_hostname mgmt",
@@ -204,18 +176,24 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "cluster",
+              "operator": "=~",
+              "value": "/^$cluster$/"
+            }
+          ]
         }
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Niobe - DP",
+      "title": "Live Cluster CPU Load",
       "transparent": true,
       "type": "bargauge"
     },
     {
       "collapsed": false,
-      "datasource": "${DS_INFLUXDB_TELEGRAF}",
+      "datasource": "InfluxDB",
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -228,51 +206,16 @@
       "type": "row"
     },
     {
-      "alert": {
-        "alertRuleTags": {},
-        "conditions": [
-          {
-            "evaluator": {
-              "params": [
-                60
-              ],
-              "type": "gt"
-            },
-            "operator": {
-              "type": "and"
-            },
-            "query": {
-              "params": [
-                "B",
-                "1m",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "avg"
-            },
-            "type": "query"
-          }
-        ],
-        "executionErrorState": "alerting",
-        "for": "5m",
-        "frequency": "1m",
-        "handler": 1,
-        "message": "Alto uso de CPU en del DP del FW activo.",
-        "name": "PaloAlto HIGH CPU",
-        "noDataState": "no_data",
-        "notifications": []
-      },
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_INFLUXDB_TELEGRAF}",
+      "datasource": "InfluxDB",
       "decimals": 0,
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "custom": {},
+          "links": []
         },
         "overrides": []
       },
@@ -291,7 +234,7 @@
         "avg": true,
         "current": true,
         "hideEmpty": true,
-        "hideZero": true,
+        "hideZero": false,
         "max": true,
         "min": false,
         "show": true,
@@ -304,18 +247,14 @@
       "linewidth": 1,
       "nullPointMode": "null",
       "options": {
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
+      "pluginVersion": "7.4.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
-      "seriesOverrides": [
-        {
-          "alias": "/mgmt/",
-          "legend": false
-        }
-      ],
+      "seriesOverrides": [],
       "spaceLength": 10,
       "stack": false,
       "steppedLine": false,
@@ -345,6 +284,8 @@
           "measurement": "pan_system",
           "orderByTime": "ASC",
           "policy": "default",
+          "query": "SELECT mean(\"hrProcessorLoad.1\") FROM \"pan_system\" WHERE (\"hostname\" =~ /^$hostname$/) AND $timeFilter GROUP BY time($__interval), \"hostname\" fill(none)",
+          "rawQuery": false,
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
@@ -361,7 +302,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "$tag_hostname DP",
@@ -404,19 +351,16 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         }
       ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "fill": true,
-          "line": true,
-          "op": "gt",
-          "value": 60,
-          "yaxis": "left"
-        }
-      ],
+      "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
@@ -463,10 +407,11 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_INFLUXDB_TELEGRAF}",
+      "datasource": "InfluxDB",
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "custom": {},
+          "links": []
         },
         "overrides": []
       },
@@ -495,9 +440,10 @@
       "linewidth": 1,
       "nullPointMode": "null",
       "options": {
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
+      "pluginVersion": "7.4.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -527,12 +473,59 @@
               "type": "fill"
             }
           ],
+          "hide": true,
           "measurement": "pan_system",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT mean(/cpu_temp\\d+/) FROM \"pan_system\" WHERE $timeFilter GROUP BY time($__interval), \"hostname\" fill(linear)",
+          "query": "SELECT mean(/\\S+_temp/) FROM \"pan_system\" WHERE (\"hostname\" =~ /^$hostname$/) AND $timeFilter GROUP BY time($__interval), \"hostname\" fill(linear)",
           "rawQuery": true,
           "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "cpu_temp1"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "$col",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "hostname"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "linear"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "pan_system",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(/\\S+_temp/) FROM \"pan_system\" WHERE (\"hostname\" =~ /^$hostname$/) AND $timeFilter GROUP BY time($__interval), \"hostname\" fill(linear)",
+          "rawQuery": true,
+          "refId": "B",
           "resultFormat": "time_series",
           "select": [
             [
@@ -597,10 +590,11 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_INFLUXDB_TELEGRAF}",
+      "datasource": "InfluxDB",
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "custom": {},
+          "links": []
         },
         "overrides": []
       },
@@ -629,9 +623,10 @@
       "linewidth": 1,
       "nullPointMode": "null",
       "options": {
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
+      "pluginVersion": "7.4.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -641,6 +636,7 @@
       "steppedLine": false,
       "targets": [
         {
+          "alias": "$col",
           "groupBy": [
             {
               "params": [
@@ -665,7 +661,7 @@
           "measurement": "pan_system",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT mean(/fan\\d+/) FROM \"pan_system\" WHERE $timeFilter GROUP BY time($__interval), \"hostname\" fill(linear)",
+          "query": "SELECT mean(/fan\\d+/) FROM \"pan_system\" WHERE (\"hostname\" =~ /^$hostname$/) AND $timeFilter GROUP BY time($__interval), \"hostname\" fill(linear)",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
@@ -729,7 +725,7 @@
     },
     {
       "collapsed": false,
-      "datasource": "${DS_INFLUXDB_TELEGRAF}",
+      "datasource": "InfluxDB",
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -746,11 +742,12 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_INFLUXDB_TELEGRAF}",
+      "datasource": "InfluxDB",
       "decimals": 0,
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "custom": {},
+          "links": []
         },
         "overrides": []
       },
@@ -781,9 +778,10 @@
       "linewidth": 1,
       "nullPointMode": "null",
       "options": {
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
+      "pluginVersion": "7.4.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -833,7 +831,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         }
       ],
       "thresholds": [],
@@ -882,10 +886,11 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_INFLUXDB_TELEGRAF}",
+      "datasource": "InfluxDB",
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "custom": {},
+          "links": []
         },
         "overrides": []
       },
@@ -915,9 +920,10 @@
       "linewidth": 1,
       "nullPointMode": "null",
       "options": {
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
+      "pluginVersion": "7.4.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -961,7 +967,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "UDP",
@@ -998,7 +1010,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "ICMP",
@@ -1035,7 +1053,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         }
       ],
       "thresholds": [],
@@ -1045,7 +1069,7 @@
       "title": "Active Sessions per Protocol",
       "tooltip": {
         "shared": true,
-        "sort": 0,
+        "sort": 2,
         "value_type": "individual"
       },
       "type": "graph",
@@ -1084,11 +1108,12 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_INFLUXDB_TELEGRAF}",
+      "datasource": "InfluxDB",
       "description": "Number of active Conexión Per Second for Vsys",
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "custom": {},
+          "links": []
         },
         "overrides": []
       },
@@ -1119,9 +1144,10 @@
       "linewidth": 1,
       "nullPointMode": "null",
       "options": {
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
+      "pluginVersion": "7.4.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1176,6 +1202,12 @@
               "key": "Vsys",
               "operator": "=",
               "value": "vsys1"
+            },
+            {
+              "condition": "AND",
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
             }
           ]
         },
@@ -1225,6 +1257,12 @@
               "key": "Vsys",
               "operator": "=",
               "value": "vsys1"
+            },
+            {
+              "condition": "AND",
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
             }
           ]
         },
@@ -1274,6 +1312,12 @@
               "key": "Vsys",
               "operator": "=",
               "value": "vsys1"
+            },
+            {
+              "condition": "AND",
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
             }
           ]
         }
@@ -1285,7 +1329,7 @@
       "title": "Vsys1 Active CPS / Protocol",
       "tooltip": {
         "shared": true,
-        "sort": 0,
+        "sort": 2,
         "value_type": "individual"
       },
       "type": "graph",
@@ -1324,11 +1368,12 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_INFLUXDB_TELEGRAF}",
+      "datasource": "InfluxDB",
       "description": "Connections Per Seconds by Security Zone.",
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "custom": {},
+          "links": []
         },
         "overrides": []
       },
@@ -1363,9 +1408,10 @@
       "linewidth": 2,
       "nullPointMode": "null",
       "options": {
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
+      "pluginVersion": "7.4.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1399,7 +1445,7 @@
           "measurement": "pan_zone",
           "orderByTime": "ASC",
           "policy": "4weeks",
-          "query": "SELECT max(\"panZoneActiveTcpCps\") + max(\"panZoneActiveUdpCps\") + max(\"panZoneActiveOtherIpCps\") FROM \"pan_zone\" WHERE (\"zone\" =~ /^\\w/) AND $timeFilter GROUP BY time($__interval), \"zone\" fill(linear)",
+          "query": "SELECT max(\"panZoneActiveTcpCps\") + max(\"panZoneActiveUdpCps\") + max(\"panZoneActiveOtherIpCps\") FROM \"pan_zone\" WHERE (\"hostname\" =~ /^$hostname$/) AND (\"zone\" =~ /^\\w/) AND $timeFilter GROUP BY time($__interval), \"zone\" fill(linear)",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
@@ -1457,7 +1503,7 @@
       "title": "CPS by SecurityZone",
       "tooltip": {
         "shared": true,
-        "sort": 0,
+        "sort": 2,
         "value_type": "individual"
       },
       "type": "graph",
@@ -1497,11 +1543,12 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_INFLUXDB_TELEGRAF}",
+      "datasource": "InfluxDB",
       "description": "Connections Per Seconds by Protocol for each security zone.",
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "custom": {},
+          "links": []
         },
         "overrides": []
       },
@@ -1536,9 +1583,10 @@
       "linewidth": 2,
       "nullPointMode": "null",
       "options": {
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
+      "pluginVersion": "7.4.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1572,8 +1620,8 @@
           "measurement": "pan_zone",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT max(\"panZoneActiveTcpCps\") FROM \"pan_zone\" WHERE (\"zone\" =~ /^\\w/) AND $timeFilter GROUP BY time($__interval), \"zone\" fill(none)",
-          "rawQuery": false,
+          "query": "SELECT max(\"panZoneActiveTcpCps\") FROM \"pan_zone\" WHERE (\"zone\" =~ /^\\w/ AND \"hostname\" =~ /^$hostname$/) AND $timeFilter GROUP BY time($__interval), \"zone\" fill(none)",
+          "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
@@ -1595,6 +1643,12 @@
               "key": "zone",
               "operator": "=~",
               "value": "/^\\w/"
+            },
+            {
+              "condition": "AND",
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
             }
           ]
         },
@@ -1646,6 +1700,12 @@
               "key": "zone",
               "operator": "=~",
               "value": "/^\\w/"
+            },
+            {
+              "condition": "AND",
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
             }
           ]
         },
@@ -1697,6 +1757,12 @@
               "key": "zone",
               "operator": "=~",
               "value": "/^\\w/"
+            },
+            {
+              "condition": "AND",
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
             }
           ]
         }
@@ -1708,7 +1774,7 @@
       "title": "CPS by protocols and zones",
       "tooltip": {
         "shared": true,
-        "sort": 0,
+        "sort": 2,
         "value_type": "individual"
       },
       "type": "graph",
@@ -1748,10 +1814,11 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_INFLUXDB_TELEGRAF}",
+      "datasource": "InfluxDB",
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "custom": {},
+          "links": []
         },
         "overrides": []
       },
@@ -1781,9 +1848,10 @@
       "linewidth": 1,
       "nullPointMode": "null",
       "options": {
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
+      "pluginVersion": "7.4.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1814,10 +1882,11 @@
               "type": "fill"
             }
           ],
+          "hide": false,
           "measurement": "pan_buffers",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT last(\"hrStorageUsed\")/last(\"hrStorageSize\")*100 FROM \"pan_buffers\" WHERE (\"hrStorageIndex\" =~ /\\d\\d\\d\\d/) AND $timeFilter GROUP BY time($__interval), \"hrStorageDescr\" fill(linear)",
+          "query": "SELECT last(\"hrStorageUsed\")/last(\"hrStorageSize\")*100 FROM \"pan_buffers\" WHERE (\"hostname\" =~ /^$hostname$/) AND (\"hrStorageIndex\" =~ /\\d\\d\\d\\d/) AND $timeFilter GROUP BY time($__interval), \"hrStorageDescr\" fill(linear)",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
@@ -1863,7 +1932,7 @@
       "title": "% Packet Buffers & Descriptors",
       "tooltip": {
         "shared": true,
-        "sort": 0,
+        "sort": 2,
         "value_type": "individual"
       },
       "type": "graph",
@@ -1903,10 +1972,11 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_INFLUXDB_TELEGRAF}",
+      "datasource": "InfluxDB",
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "custom": {},
+          "links": []
         },
         "overrides": []
       },
@@ -1935,9 +2005,10 @@
       "linewidth": 1,
       "nullPointMode": "null",
       "options": {
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
+      "pluginVersion": "7.4.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1965,6 +2036,8 @@
           "measurement": "pan_global_counters",
           "orderByTime": "ASC",
           "policy": "default",
+          "query": "SELECT difference(mean(\"panFlowIpfragRecv\")) FROM \"pan_global_counters\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": false,
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
@@ -1985,7 +2058,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "IpfragErr",
@@ -2026,7 +2105,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         }
       ],
       "thresholds": [],
@@ -2075,10 +2160,11 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_INFLUXDB_TELEGRAF}",
+      "datasource": "InfluxDB",
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "custom": {},
+          "links": []
         },
         "overrides": []
       },
@@ -2089,6 +2175,297 @@
         "w": 12,
         "x": 12,
         "y": 30
+      },
+      "hiddenSeries": false,
+      "id": 50,
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.4.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "alias": "$tag_hrStorageDescr",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "hrStorageDescr"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "linear"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "pan_buffers",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT last(\"hrStorageUsed\")/last(\"hrStorageSize\")*100 FROM \"pan_buffers\" WHERE \"hostname\" =~ /^$hostname$/ AND (g\"hrStorageIndex\" =~ /^\\d\\d$/) AND $timeFilter GROUP BY time($__interval), \"hrStorageDescr\" fill(linear)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "hrStorageUsed"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "hrStorageSize"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "hrStorageIndex",
+              "operator": "=~",
+              "value": "/\\d\\d\\d\\d/"
+            }
+          ]
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "% Space and Memory",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "decimals": null,
+          "format": "percent",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "InfluxDB",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 3,
+      "gridPos": {
+        "h": 5,
+        "w": 12,
+        "x": 0,
+        "y": 36
+      },
+      "hiddenSeries": false,
+      "id": 44,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.4.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "alias": "Active Tunnels",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "linear"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "pan_system",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "panGPGWUtilizationActiveTunnels"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Active Tunnels",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "InfluxDB",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 3,
+      "gridPos": {
+        "h": 5,
+        "w": 12,
+        "x": 12,
+        "y": 36
       },
       "hiddenSeries": false,
       "id": 40,
@@ -2108,9 +2485,10 @@
       "linewidth": 1,
       "nullPointMode": "null",
       "options": {
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
+      "pluginVersion": "7.4.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -2167,7 +2545,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "FlowActionReset",
@@ -2208,7 +2592,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "FlowTcpNonSyn",
@@ -2249,7 +2639,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "TcpAllocWqeFailed",
@@ -2290,7 +2686,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "TcpDeny",
@@ -2331,7 +2733,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "TcpDropOutOfWnd",
@@ -2372,7 +2780,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "TcpDropPacket",
@@ -2413,7 +2827,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "TcpExceedSegLimit",
@@ -2454,7 +2874,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         }
       ],
       "thresholds": [],
@@ -2464,7 +2890,7 @@
       "title": "TCP State Counters",
       "tooltip": {
         "shared": true,
-        "sort": 0,
+        "sort": 2,
         "value_type": "individual"
       },
       "type": "graph",
@@ -2491,131 +2917,6 @@
           "max": null,
           "min": null,
           "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "${DS_INFLUXDB_TELEGRAF}",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
-      "fill": 1,
-      "fillGradient": 3,
-      "gridPos": {
-        "h": 5,
-        "w": 12,
-        "x": 0,
-        "y": 36
-      },
-      "hiddenSeries": false,
-      "id": 44,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "nullPointMode": "null",
-      "options": {
-        "dataLinks": []
-      },
-      "percentage": false,
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "alias": "Active Tunnels",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "linear"
-              ],
-              "type": "fill"
-            }
-          ],
-          "measurement": "pan_system",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "B",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "panGPGWUtilizationActiveTunnels"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Active Tunnels",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": false
         }
       ],
       "yaxis": {
@@ -2625,7 +2926,7 @@
     },
     {
       "collapsed": true,
-      "datasource": "${DS_INFLUXDB_TELEGRAF}",
+      "datasource": "InfluxDB",
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -2642,10 +2943,11 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_INFLUXDB_TELEGRAF}",
+      "datasource": "InfluxDB",
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "custom": {},
+          "links": []
         },
         "overrides": []
       },
@@ -2662,8 +2964,8 @@
       "legend": {
         "avg": false,
         "current": false,
-        "hideEmpty": true,
-        "hideZero": true,
+        "hideEmpty": false,
+        "hideZero": false,
         "max": false,
         "min": false,
         "show": true,
@@ -2674,9 +2976,10 @@
       "linewidth": 1,
       "nullPointMode": "null",
       "options": {
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
+      "pluginVersion": "7.4.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -2701,6 +3004,7 @@
               "type": "fill"
             }
           ],
+          "hide": false,
           "measurement": "pan_dos",
           "orderByTime": "ASC",
           "policy": "default",
@@ -2724,7 +3028,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "ICMPv6",
@@ -2742,6 +3052,7 @@
               "type": "fill"
             }
           ],
+          "hide": false,
           "measurement": "pan_dos",
           "orderByTime": "ASC",
           "policy": "default",
@@ -2765,7 +3076,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "IP",
@@ -2783,6 +3100,7 @@
               "type": "fill"
             }
           ],
+          "hide": false,
           "measurement": "pan_dos",
           "orderByTime": "ASC",
           "policy": "default",
@@ -2806,7 +3124,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "TCP",
@@ -2824,6 +3148,7 @@
               "type": "fill"
             }
           ],
+          "hide": false,
           "measurement": "pan_dos",
           "orderByTime": "ASC",
           "policy": "default",
@@ -2847,7 +3172,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "UDP",
@@ -2888,7 +3219,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "Zone",
@@ -2929,7 +3266,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "ZoneThresholdMax",
@@ -2970,7 +3313,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         }
       ],
       "thresholds": [],
@@ -2980,7 +3329,7 @@
       "title": "Packets Dropped Zone Prot. - RED",
       "tooltip": {
         "shared": true,
-        "sort": 0,
+        "sort": 2,
         "value_type": "individual"
       },
       "type": "graph",
@@ -3019,11 +3368,12 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_INFLUXDB_TELEGRAF}",
+      "datasource": "InfluxDB",
       "description": "TCP SYN Cookies, classified profile",
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "custom": {},
+          "links": []
         },
         "overrides": []
       },
@@ -3042,7 +3392,7 @@
         "avg": false,
         "current": false,
         "hideEmpty": true,
-        "hideZero": true,
+        "hideZero": false,
         "max": false,
         "min": false,
         "show": true,
@@ -3053,9 +3403,10 @@
       "linewidth": 1,
       "nullPointMode": "null",
       "options": {
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
+      "pluginVersion": "7.4.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -3112,7 +3463,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "Rcv",
@@ -3154,7 +3511,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "Sent",
@@ -3198,7 +3561,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "Packets dropped",
@@ -3240,7 +3609,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "Max Threshold Reached",
@@ -3282,7 +3657,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "Session Limit Reached for classified profile",
@@ -3324,7 +3705,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         }
       ],
       "thresholds": [],
@@ -3334,7 +3721,7 @@
       "title": "TCP SYN Cookies",
       "tooltip": {
         "shared": true,
-        "sort": 0,
+        "sort": 2,
         "value_type": "individual"
       },
       "type": "graph",
@@ -3373,10 +3760,11 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_INFLUXDB_TELEGRAF}",
+      "datasource": "InfluxDB",
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "custom": {},
+          "links": []
         },
         "overrides": []
       },
@@ -3394,7 +3782,7 @@
         "avg": false,
         "current": false,
         "hideEmpty": true,
-        "hideZero": true,
+        "hideZero": false,
         "max": false,
         "min": false,
         "show": true,
@@ -3405,9 +3793,10 @@
       "linewidth": 1,
       "nullPointMode": "null",
       "options": {
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
+      "pluginVersion": "7.4.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -3464,7 +3853,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "Deny",
@@ -3505,7 +3900,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "Aggregate_rate_limit",
@@ -3546,7 +3947,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "Flagged_for_dropping",
@@ -3587,7 +3994,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "Classified_RED",
@@ -3628,7 +4041,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "Classified_rate_limit",
@@ -3669,7 +4088,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         }
       ],
       "thresholds": [],
@@ -3679,7 +4104,7 @@
       "title": "DoS Rule Drop/Deny",
       "tooltip": {
         "shared": true,
-        "sort": 0,
+        "sort": 2,
         "value_type": "individual"
       },
       "type": "graph",
@@ -3718,10 +4143,11 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_INFLUXDB_TELEGRAF}",
+      "datasource": "InfluxDB",
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "custom": {},
+          "links": []
         },
         "overrides": []
       },
@@ -3740,7 +4166,7 @@
         "avg": false,
         "current": false,
         "hideEmpty": true,
-        "hideZero": true,
+        "hideZero": false,
         "max": false,
         "min": false,
         "show": true,
@@ -3751,9 +4177,10 @@
       "linewidth": 1,
       "nullPointMode": "null",
       "options": {
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
+      "pluginVersion": "7.4.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -3801,7 +4228,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "Nat Allocation Err",
@@ -3842,7 +4275,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         }
       ],
       "thresholds": [],
@@ -3891,10 +4330,11 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_INFLUXDB_TELEGRAF}",
+      "datasource": "InfluxDB",
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "custom": {},
+          "links": []
         },
         "overrides": []
       },
@@ -3923,9 +4363,10 @@
       "linewidth": 1,
       "nullPointMode": "null",
       "options": {
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
+      "pluginVersion": "7.4.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -3966,15 +4407,21 @@
               },
               {
                 "params": [],
-                "type": "max"
+                "type": "mean"
               },
               {
                 "params": [],
-                "type": "difference"
+                "type": "non_negative_difference"
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "IpBlocked_scan",
@@ -3992,6 +4439,7 @@
               "type": "fill"
             }
           ],
+          "hide": false,
           "measurement": "pan_dos",
           "orderByTime": "ASC",
           "policy": "default",
@@ -4007,22 +4455,30 @@
               },
               {
                 "params": [],
-                "type": "max"
+                "type": "mean"
               },
               {
-                "params": [],
-                "type": "difference"
+                "params": [
+                  "10s"
+                ],
+                "type": "non_negative_derivative"
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "IP Blocked",
+      "title": "DoS Flow Drop by IP Blocked",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -4064,11 +4520,12 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_INFLUXDB_TELEGRAF}",
+      "datasource": "InfluxDB",
       "description": "Number of entries in DoS block tables",
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "custom": {},
+          "links": []
         },
         "overrides": []
       },
@@ -4097,9 +4554,10 @@
       "linewidth": 1,
       "nullPointMode": "null",
       "options": {
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
+      "pluginVersion": "7.4.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -4143,7 +4601,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "BySoftware",
@@ -4180,7 +4644,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "Total Blocked",
@@ -4217,7 +4687,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         }
       ],
       "thresholds": [],
@@ -4227,7 +4703,7 @@
       "title": "DoS Block Tables",
       "tooltip": {
         "shared": true,
-        "sort": 0,
+        "sort": 2,
         "value_type": "individual"
       },
       "type": "graph",
@@ -4267,10 +4743,11 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_INFLUXDB_TELEGRAF}",
+      "datasource": "InfluxDB",
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "custom": {},
+          "links": []
         },
         "overrides": []
       },
@@ -4288,7 +4765,7 @@
         "avg": false,
         "current": false,
         "hideEmpty": true,
-        "hideZero": true,
+        "hideZero": false,
         "max": false,
         "min": false,
         "show": true,
@@ -4299,9 +4776,10 @@
       "linewidth": 1,
       "nullPointMode": "null",
       "options": {
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
+      "pluginVersion": "7.4.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -4349,7 +4827,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "Service Deny",
@@ -4390,7 +4874,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "Service Unknown",
@@ -4431,7 +4921,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "Host Throttle",
@@ -4472,7 +4968,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "Alloc Failure",
@@ -4513,7 +5015,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "Alloc Failure Cos",
@@ -4554,7 +5062,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         },
         {
           "alias": "Session Discard",
@@ -4595,7 +5109,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "hostname",
+              "operator": "=~",
+              "value": "/^$hostname$/"
+            }
+          ]
         }
       ],
       "thresholds": [],
@@ -4605,7 +5125,7 @@
       "title": "Drop Counters",
       "tooltip": {
         "shared": true,
-        "sort": 0,
+        "sort": 2,
         "value_type": "individual"
       },
       "type": "graph",
@@ -4640,15 +5160,83 @@
       }
     }
   ],
-  "refresh": "5m",
-  "schemaVersion": 25,
+  "refresh": "10s",
+  "schemaVersion": 27,
   "style": "dark",
   "tags": [
     "production",
     "security"
   ],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "allValue": null,
+        "current": {
+          "selected": true,
+          "text": "cluster2",
+          "value": "cluster2"
+        },
+        "datasource": null,
+        "definition": "SHOW TAG VALUES FROM \"pan_vsys\" WITH KEY = \"cluster\" ",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": false,
+        "label": null,
+        "multi": false,
+        "name": "cluster",
+        "options": [],
+        "query": "SHOW TAG VALUES FROM \"pan_vsys\" WITH KEY = \"cluster\" ",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "oraculo",
+          "value": "oraculo"
+        },
+        "datasource": null,
+        "definition": "SHOW TAG VALUES FROM \"pan_vsys\" WITH KEY = \"hostname\"  WHERE cluster =~ /$cluster/",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": false,
+        "label": null,
+        "multi": false,
+        "name": "hostname",
+        "options": [
+          {
+            "selected": true,
+            "text": "oraculo",
+            "value": "oraculo"
+          },
+          {
+            "selected": false,
+            "text": "seraph",
+            "value": "seraph"
+          }
+        ],
+        "query": "SHOW TAG VALUES FROM \"pan_vsys\" WITH KEY = \"hostname\"  WHERE cluster =~ /$cluster/",
+        "refresh": 0,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }
+    ]
   },
   "time": {
     "from": "now-24h",
@@ -4670,5 +5258,5 @@
   "timezone": "",
   "title": "PaloAlto PanOS Firewall",
   "uid": "qLLeD-JZy",
-  "version": 7
+  "version": 9
 }
