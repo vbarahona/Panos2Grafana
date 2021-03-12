@@ -9,7 +9,7 @@ If you are using a different one, probably some sensor graphs (cpu_temp and fan_
 
 <p align="center"><img src="https://github.com/vbarahona/Panos2Grafana/blob/master/screencapture-paloalto-grafana.png" alt="screenshot" width="400"></p>
 
-# Getting Starting
+# Getting Started
 
 ## Prerequisites
 The infraestruture needed is:
