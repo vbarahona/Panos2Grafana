@@ -1,7 +1,11 @@
 # Panos2Grafana
 Steps and configurations to create a complete PaloAlto Firewall dashboard in GRAFANA. The dashboard is compatible with a standalone firewall, with one HA cluster of 2 firewalls and with multiple clusters. 
 
-At this time its provided tested support for models PA5250, PA3020 and PA820.
+At this time support for models:
+* PA-5250
+* PA-5050
+* PA-3020
+* PA-820
 
 If you are using a different one, probably some sensor graphs (cpu_temp and fan_speed) can be inadequate, but rest of the panels should be ok.
 
